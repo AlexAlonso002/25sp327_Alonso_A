@@ -1,1 +1,47 @@
+# Compiled object files
+*.o
+
+# Compiled binary files
+*.out
+*.exe
+
+# Precompiled Headers
+*.gch
+
+# Static libraries
+*.a
+
+# Dynamic libraries
+*.so
+*.dll
+*.dylib
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# IDE and editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*~
+*.bak
+
+# Logs and debugging files
+*.log
+
+# Build directories
+/build/
+/bin/
+/obj/
+
+# Dependency files
+*.d
+
+# System files
+.DS_Store
+Thumbs.db
 
