@@ -1,0 +1,2 @@
+yes "Any Message" 
+This will spam your terminal with the message. Why does this exist I do not know why.
