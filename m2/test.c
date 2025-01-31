@@ -52,10 +52,17 @@ double calculation(double MoneyMonth, double intrest , long years){
     double monthlyInt = intrest / 12 / 100 ;
     long months = years * 12  ;
     double Future_value = 0  ;
-    for (int i = 0 ;  i < months ; ++i) {
+    printf("Year    Accum Interest  Value \n") ;
+    printf("===     ==============   ======\n") ;
+    for (int i = 1 ;  i < months+1 ; ++i) {
         Future_value += MoneyMonth  ;
         double monthlyintrestamount = Future_value * monthlyInt ;
         Future_value += monthlyintrestamount ;
-    }
+       if (i % 12 == 0) { 
+            printf("%d      %.2f        %.2f \n" , i/12 , Future_value-(i*100), Future_value) ;
+        }
+    } 
     return Future_value ;
 }
+
+
