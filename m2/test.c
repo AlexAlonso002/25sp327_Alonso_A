@@ -50,7 +50,7 @@ double convert_to_doubles(char *strval){
 
 double calculation(double MoneyMonth, double intrest , long years){
     double monthlyInt = intrest / 12 / 100 ;
-    long months = years * 12  ;
+    double months = years * 12  ;
     double Future_value = 0  ;
     printf("Year    Accum Interest  Value \n") ;
     printf("===     ==============   ======\n") ;
