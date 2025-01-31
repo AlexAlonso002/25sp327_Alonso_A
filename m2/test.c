@@ -59,7 +59,7 @@ double calculation(double MoneyMonth, double intrest , long years){
         double monthlyintrestamount = Future_value * monthlyInt ;
         Future_value += monthlyintrestamount ;
        if (i % 12 == 0) { 
-            printf("%d      %.2f        %.2f \n" , i/12 , Future_value-(i*100), Future_value) ;
+            printf("%d      %.2f        %.2f \n" , i/12 , Future_value-(i*MoneyMonth), Future_value) ;
         }
     } 
     return Future_value ;
