@@ -1,6 +1,6 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
-#include <errno.h> 
+#include <errno.h>
 
 void calculation(double month, double interest, long year, double arrYears[], double IntArray[], double FV[]);
 long convert_to_long(char *type , char *val);
@@ -38,17 +38,19 @@ void calculation(double MoneyMonth, double interest, long years, double arrYears
     double monthlyInt = interest / 12 / 100;
     long months = years * 12;
     double Future_value = 0;
+    double totalDeposits = 0;
 
     for (long i = 1; i <= months; ++i) {
         Future_value += MoneyMonth;
+        totalDeposits += MoneyMonth;
         double monthlyInterestAmount = Future_value * monthlyInt;
         Future_value += monthlyInterestAmount;
 
         if (i % 12 == 0) {
             int yearIndex = i / 12 - 1;
-            arrYears[yearIndex] = i / 12;
-            IntArray[yearIndex] = Future_value - (i * MoneyMonth);
-            FV[yearIndex] = Future_value;
+            arrYears[yearIndex] = i / 12; // Year
+            IntArray[yearIndex] = Future_value - totalDeposits; // Accumulated Interest
+            FV[yearIndex] = Future_value; // Future Value
         }
     }
 }
