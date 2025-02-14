@@ -24,7 +24,8 @@ void test_validate_double_when_vaild(void **state){//every company names these d
     //Assert
     assert_true(result);
     // i want to assert if the return value is true
-    assert_double_equal(number, 5.5, 0.00);
+    assert_float_equal(number, 5.5, 0.00);
+    //assert_double_equal(number, 5.5, 0.00);
     //assert_false(number == 5.5);
 } 
 
@@ -70,20 +71,24 @@ void test_validate_double_when_not_a_double(void **state){
 }
 
 void test_validate_double_when_its_a_integer(void **state){//every company names these differently
-
-    // Arrange 
     double number;
     char err_msg[100]; //here we are giving it a buffer of 100 characters
     // this part is the act or known as execute
     bool result = validate_double("2\n", 0.0, 10.0, &number, err_msg);
-
-    // these tests should be rly simple
-
     //Assert
     assert_true(result);
-    // i want to assert if the return value is true
-    assert_double_equal(number, 2, 0.00);
+    assert_float_equal(number, 2, 0.00);
+    //assert_double_equal(number, 2, 0.00);
     //assert_false(number == 5.5);
+} 
+void test_validate_double_when_its_multiple_values_are_pass(void **state){//every company names these differently
+    double number;
+    char err_msg[100]; //here we are giving it a buffer of 100 characters
+    // this part is the act or known as execute
+    bool result = validate_double("5 4\n", 0.0, 10.0, &number, err_msg);
+    //Assert
+    assert_false(result);
+    assert_string_equal(err_msg, "Entry must be a single numeric value. Please try again.");
 } 
 
 int main(void){
@@ -92,7 +97,8 @@ int main(void){
         cmocka_unit_test(test_validate_double_when_out_of_range),
         cmocka_unit_test(test_validate_double_when_not_Greater_equal_to),
         cmocka_unit_test(test_validate_double_when_not_a_double),
-        cmocka_unit_test(test_validate_double_when_its_a_integer)
+        cmocka_unit_test(test_validate_double_when_its_a_integer),
+        cmocka_unit_test(test_validate_double_when_its_multiple_values_are_pass)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
