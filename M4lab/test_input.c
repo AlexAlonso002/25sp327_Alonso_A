@@ -69,15 +69,22 @@ void test_validate_double_when_not_a_double(void **state){
     assert_string_equal(err_msg, "Entry must be numeric. Please try again.");
 }
 
-void test_validate_double_when_its_a_integer(void **state){
+void test_validate_double_when_its_a_integer(void **state){//every company names these differently
 
-    double number ;
-    char err_msg[100] ;
+    // Arrange 
+    double number;
+    char err_msg[100]; //here we are giving it a buffer of 100 characters
+    // this part is the act or known as execute
+    bool result = validate_double("2\n", 0.0, 10.0, &number, err_msg);
 
-    bool result = validate_double("2 \n " , 0.0 , 10.0 , &number,err_msg) ;
+    // these tests should be rly simple
 
-    assert_true(result) ;
-}
+    //Assert
+    assert_true(result);
+    // i want to assert if the return value is true
+    assert_double_equal(number, 2, 0.00);
+    //assert_false(number == 5.5);
+} 
 
 int main(void){
     const struct CMUnitTest tests[] = {
