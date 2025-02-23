@@ -96,28 +96,26 @@ void get_cpu_usage() {
     FILE *file = fopen("/proc/stat", "r");
     if (file) {
         char line[256];
-        char label[44];
-        long user, nice, system, idle;
-
-        if (fgets(line, sizeof(line), file)) {
-            // Parsing the data from the line manually
-            if (sscanf(line, "%s %ld %ld %ld %ld", label, &user, &nice, &system, &idle) == 5) {
-                printf(COLUMN_FORMAT " %ld ms \n", "Time Spent in User Mode: ", user);
-                printf(COLUMN_FORMAT " %ld ms \n", "Time Spent in System Mode: ", system);
-                printf(COLUMN_FORMAT " %ld ms \n", "Time Spent in Idle Mode: ", idle);
-            } else {
-                perror("Error parsing CPU usage data");
+        while (fgets(line, sizeof(line), file)) {
+            // Check if the line starts with "cpu " (note the space to match aggregate CPU stats)
+            if (strncmp(line, "cpu ", 4) == 0) {
+                char label[44];
+                long user, nice, system, idle;
+                if (sscanf(line, "%s %ld %ld %ld %ld", label, &user, &nice, &system, &idle) == 5) {
+                    printf(COLUMN_FORMAT " %ld ms\n", "Time Spent in User Mode:", user);
+                    printf(COLUMN_FORMAT " %ld ms\n", "Time Spent in System Mode:", system);
+                    printf(COLUMN_FORMAT " %ld ms\n", "Time Spent in Idle Mode:", idle);
+                } else {
+                    perror("Error parsing CPU usage data");
+                }
+                break; // Exit loop after finding the required line
             }
-        } else {
-            perror("Error reading line from stat");
         }
-
         fclose(file);
     } else {
-        perror("Error opening stat");
+        perror("Error opening /proc/stat");
     }
 }
-
 void get_memory_info() {
     FILE *file = fopen("/proc/meminfo", "r");
     char line[44];
