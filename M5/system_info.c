@@ -97,7 +97,6 @@ void get_cpu_usage() {
     if (file) {
         char line[256];
         while (fgets(line, sizeof(line), file)) {
-            // Check if the line starts with "cpu " (note the space to match aggregate CPU stats)
             if (strncmp(line, "cpu ", 4) == 0) {
                 char label[44];
                 long user, nice, system, idle;
@@ -108,7 +107,7 @@ void get_cpu_usage() {
                 } else {
                     perror("Error parsing CPU usage data");
                 }
-                break; // Exit loop after finding the required line
+                break; 
             }
         }
         fclose(file);
