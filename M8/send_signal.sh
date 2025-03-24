@@ -10,15 +10,11 @@ fi
 
 echo "Found child process with PID: $CHILD_PID"
 
-# Number of SIGTSTP signals to send
-NUM_SIGNALS=5
-INTERVAL=3  # Time in seconds between signals
 
-# Send SIGTSTP signals
-for ((i=1; i<=NUM_SIGNALS; i++)); do
-  echo "Sending SIGTSTP to PID every 3 seconds $CHILD_PID ($i/$NUM_SIGNALS)"
+for ((i=1; i<=5; i++)); do
+  echo "Sending SIGTSTP to PID every 3 seconds $CHILD_PID "
   kill -SIGTSTP "$CHILD_PID"
-  sleep "$INTERVAL"
+  sleep 3
 done
 
 # Send SIGTERM to gracefully stop the process
