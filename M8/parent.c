@@ -10,25 +10,28 @@
 
 volatile sig_atomic_t sum = 0; 
 
-static void SigChild(){
-    printf("Child is Done ") ;
+static void SigChild(int sig, siginfo_t *sum2, void *context){
+    sum = sum2->si_value.sival_int;
+    printf(" Child (PID: %d) has terminared with status 0. Exiting \n" , sum2->si_pid, sum)  ; 
+    printf("Child is Done \n") ;
+    exit(0) ;
 
 }
 
 static void SigUser1(int sig, siginfo_t *sum2, void *context){
      sum = sum2->si_value.sival_int;
-     printf("I Recieve" , sum)  ; 
+     printf("Received SIGUSR1 from Child (PID: %d). Sum = %d \n" , sum2->si_pid, sum)  
 }
 
 static void SigUser2(){
-    printf("Working") ;
+    printf("Working \n") ;
 }
 
 
 int main(int argc, char **argv){   
     struct sigaction act;
     act.sa_flags = SA_NOCLDSTOP; 
-    act.sa_handler = SigChild; 
+    act.sa_sigaction = SigChild; 
     sigaction(SIGCHLD, &act, NULL);  
 
     struct sigaction usr1;
@@ -52,8 +55,10 @@ int main(int argc, char **argv){
     }
     else {
         printf("Parent \n");
-        wait(NULL);
-        printf("BYE \n") ;
+        while(1){
+            printf("Working\n" ) ;
+            sleep(2) ; 
+        }
     }
 
 }

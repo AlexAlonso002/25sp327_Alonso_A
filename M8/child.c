@@ -10,17 +10,22 @@
 volatile sig_atomic_t sum= 0; 
 
 static void SigStop(){
-    printf("Working") ;
+    union sigval sum2; 
+    sum2.sival_int = sum;
+    printf("SIGTSTP received. Sending sum to parent.");
+    sigqueue(getppid(), SIGUSR1, sum2); 
 }
 
 static void SigUser1(){
-    union sigval sum2; 
-    sum2.sival_int = sum;
-    sigqueue(getppid(), SIGUSR1, sum2);  
+   printf("Daddy send me a text \n") ;
 }
 
-static void SigUser2(){
-    printf("Working") ;
+static void SigTerm(){
+    union sigval value;
+    value.sival_int = 1234; 
+    printf("Im leaving daddy \n") ;
+    sigqueue(getppid(), SIGCHLD, value); 
+    exit(0) ;
 }
 
 int main(int argc, char **argv){
@@ -34,15 +39,25 @@ int main(int argc, char **argv){
     sigaction(SIGUSR1, &usr1, NULL);
 
     struct sigaction usr2;
-    usr2.sa_handler = SigUser2;  
-    sigaction(SIGUSR2, &usr2, NULL);
+    usr2.sa_handler = SigTerm;  
+    sigaction(SIGTERM, &usr2, NULL);
 
     int value = getpid() ;
     printf("Child Process PID: %d\n", value);
 
-    kill(getppid(),SIGUSR1) ; 
+    while(1){
+        sum = sum + 5 ;
+        printf("Running... Use 'kill -SIGTSTP %d' to interrupt me. \n" , value) ;
+        sleep(2) ;
+    }
+
+    //union sigval sum2;
+    //sum = sum +1 ;
+    //sum2.sival_int = sum;
+    //sigqueue(getppid(), SIGUSR1, sum2);
+    //kill(getppid(),SIGUSR1) ; 
 
 
-    exit(0) ;
+    //exit(0) ;
  
 }
