@@ -29,7 +29,7 @@ static void SigTerm(){
     printf("CHILD: Im leaving \n") ;
     if(sigqueue(getppid(), SIGCHLD, value) == -1){
         perror("sigqueue failed");
-        exit(1) ;
+        exit(EXIT_FAILURE);
     } 
     exit(0) ;
 }
@@ -40,7 +40,7 @@ int main(int argc, char **argv){
     stop.sa_handler = SigStop;  
     if(sigaction(SIGTSTP, &stop, NULL) == -1 ) {
         perror("sigaction failed for SIGSTP");
-        exit(1);  
+        exit(EXIT_FAILURE);
     }
 
     struct sigaction usr1;
@@ -48,14 +48,14 @@ int main(int argc, char **argv){
     usr1.sa_flags = SA_SIGINFO; 
     if(sigaction(SIGUSR2, &usr1, NULL) == -1){
         perror("sigaction failed for SIGUSR2");
-        exit(1);  
+        exit(EXIT_FAILURE); 
     }
 
     struct sigaction usr2;
     usr2.sa_handler = SigTerm;  
     if( sigaction(SIGTERM, &usr2, NULL) ==1){
          perror("sigaction failed for SIGTERM");
-        exit(1);  
+        exit(EXIT_FAILURE); 
     }
 
     int value = getpid() ;

@@ -25,7 +25,7 @@ static void SigUser1(int sig, siginfo_t *sum2, void *context){
     value.sival_int = 1; 
      if (sigqueue(sum2->si_pid, SIGUSR2, value) == -1) {
         perror("sigqueue failed");
-        exit(1) ;
+        exit(EXIT_FAILURE);
     } 
 }
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv){
     act.sa_sigaction = SigChild; 
     if( sigaction(SIGCHLD, &act, NULL) == -1) {
         perror("sigaction 4 SIGCHLD") ; 
-        exit(1) ;
+        exit(EXIT_FAILURE);
     }
 
     struct sigaction usr1;
@@ -46,7 +46,7 @@ int main(int argc, char **argv){
     usr1.sa_flags = SA_SIGINFO;
     if( sigaction(SIGUSR1, &usr1, NULL) == -1) {
         perror("sigaction 4 SIGUSR1 ") ; 
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pid_t ret;
@@ -58,8 +58,10 @@ int main(int argc, char **argv){
     }
     else if(ret == 0){
         // make child go to child.c
-        printf("Child \n") ;
-        execl("./child", "./child", NULL);
+       if (execl("./child", "./child", NULL) == -1) {
+        perror("execl failed");
+        exit(EXIT_FAILURE);
+    }
     }
     else {
         int status;
