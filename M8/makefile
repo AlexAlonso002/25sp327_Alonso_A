@@ -12,3 +12,6 @@ child: child.c
 
 clean:
 	rm -f parent child
+
+run: all
+	./parent
