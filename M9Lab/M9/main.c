@@ -17,18 +17,18 @@ static void nap_random();
 int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
-    if(argc > 2 ){
-        printf('We need 2 arguments. One for number of threads. Seconds for number of request')
-        exit(0)
+    if(argc < 2 ){
+        printf('We need 2 arguments. One for number of threads. Seconds for number of request') ;
+        exit(0) ;
     }
     // TODO: Accept command-line arguments for the following:
     // - number of worker threads
     // - total number of requests to generate
     int num_threads = 0;
     int num_requests = 0;
-    num_threads = argv[0]
+    num_threads = argv[0] ;
     num_requests = argv[1] ;
-    printf("Num of threads %d , num of request %d " , num_threads , num_requests)
+    printf("Num of threads %d , num of request %d " , num_threads , num_requests) ;
     // seed random number to vary results between program executions
     srand(time(NULL));
     // TODO: initialize mutex and cond variables

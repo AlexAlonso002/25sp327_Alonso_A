@@ -27,8 +27,7 @@ void delay_task(void* arg) {
     struct timespec* ts = ((struct timespec*)arg);
     nanosleep(ts, NULL);
     char buf[100];
-    snprintf(buf, sizeof(buf), "Simulated delay of %ld seconds and %ld
-    milliseconds.", ts->tv_sec, ts->tv_nsec / 1000000);
+    snprintf(buf, sizeof(buf), "Simulated delay of %ld seconds and %ld milliseconds.", ts->tv_sec, ts->tv_nsec / 1000000);
     log_message(buf);
     free(arg);
 }

@@ -44,6 +44,20 @@ void queue_enqueue( queue_t* que , void* data) {
     UNLOCK_MTX(que->mutex) ;
 }
 
+void queue_close(queue_t* que){
+    que->isclosed = true ; 
+}
+  
+bool queue_isclose(queue_t* que){
+    // return bol
+    if(que->isclosed == true){
+        return true ;
+    }
+    else{
+        return false  ; 
+    }
+}
+
 void queue_destroy(queue_t* que){
     free(que->header) ;
     free(que) ;
@@ -51,6 +65,8 @@ void queue_destroy(queue_t* que){
 
 void queue_dequeue(queue_t* que){
     queue_node_t* node = que->header->next;
+    printf("Dequeuing node with data: %d\n", *((int*)node->data));
+
     LOCK_MTX(que->mutex) ;
     que->header->next = node->next;
     que->size -= 1 ; 

@@ -56,18 +56,19 @@ void test_queue_dequeue(void ** state) {
     pthread_mutex_t mutex;
     pthread_cond_t cond_var;
     queue_t* que = queue_init(&mutex, &cond_var);
-    data_t data;
+    data_t data1 = {1};  
+    data_t data2 = {2}; 
 
     will_return(__wrap_pthread_mutex_lock,0) ;
     will_return(__wrap_pthread_mutex_unlock,0) ;
 
-    queue_enqueue(que, &data);
+    queue_enqueue(que, &data1);
     assert_int_equal(que->size, 1);
 
     will_return(__wrap_pthread_mutex_lock,0);
     will_return(__wrap_pthread_mutex_unlock,0);
 
-    queue_enqueue(que, &data);
+    queue_enqueue(que, &data2);
     assert_int_equal(que->size, 2);
 
     will_return(__wrap_pthread_mutex_lock,0);
@@ -81,6 +82,43 @@ void test_queue_dequeue(void ** state) {
 
     queue_dequeue(que) ; 
     assert_int_equal(que->size, 0);
+
+    queue_destroy(que) ; 
+}
+
+void test_que_is_close(void** state){
+    pthread_mutex_t mutex;
+    pthread_cond_t cond_var;
+    queue_t* que = queue_init(&mutex, &cond_var);
+    data_t data1 = {1};  
+    data_t data2 = {2}; 
+
+    will_return(__wrap_pthread_mutex_lock,0) ;
+    will_return(__wrap_pthread_mutex_unlock,0) ;
+
+    queue_enqueue(que, &data1);
+    assert_int_equal(que->size, 1);
+
+    will_return(__wrap_pthread_mutex_lock,0);
+    will_return(__wrap_pthread_mutex_unlock,0);
+
+    queue_enqueue(que, &data2);
+    assert_int_equal(que->size, 2);
+
+    will_return(__wrap_pthread_mutex_lock,0);
+    will_return(__wrap_pthread_mutex_unlock,0);
+
+    queue_dequeue(que) ; 
+    assert_int_equal(que->size, 1);
+
+    will_return(__wrap_pthread_mutex_lock,0);
+    will_return(__wrap_pthread_mutex_unlock,0);
+
+    queue_dequeue(que) ; 
+    assert_int_equal(que->size, 0);
+
+    queue_close(que) ; 
+    assert_true(queue_isclose(que));
 
     queue_destroy(que) ; 
 }
@@ -109,7 +147,8 @@ int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_queue_init),
         cmocka_unit_test(test_queue_enqueue_when_q_empty) ,
-        cmocka_unit_test(test_queue_dequeue)
+        cmocka_unit_test(test_queue_dequeue),
+        cmocka_unit_test(test_que_is_close)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
