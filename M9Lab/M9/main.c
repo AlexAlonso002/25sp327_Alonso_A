@@ -17,7 +17,7 @@ static void nap_random();
 int main(int argc, char* argv[]) {
     (void)argc;
     (void)argv;
-    if(argc < 2 ){
+    if(argc < 3 ){
         printf('We need 2 arguments. One for number of threads. Seconds for number of request') ;
         exit(0) ;
     }
