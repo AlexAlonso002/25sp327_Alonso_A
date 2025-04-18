@@ -30,6 +30,7 @@ queue_t* queue_init(pthread_mutex_t* mutex, pthread_cond_t* cond_var) {
 
 void queue_enqueue( queue_t* que , void* data) {
     // malloc a queue node and give it data
+    printf("Queueing Node") ;
     queue_node_t* node = malloc(sizeof(queue_node_t)) ;
     node->data = data; 
     node->next = NULL ; 
@@ -65,7 +66,8 @@ void queue_destroy(queue_t* que){
 
 void queue_dequeue(queue_t* que){
     queue_node_t* node = que->header->next;
-    printf("Dequeuing node with data: %d\n", *((int*)node->data));
+    //printf("Dequeuing node with data: %d\n", *((int*)node->data));
+    printf("Dequing Node") ;
 
     LOCK_MTX(que->mutex) ;
     que->header->next = node->next;

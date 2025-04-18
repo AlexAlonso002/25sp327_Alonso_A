@@ -14,7 +14,7 @@ struct worker_thread {
 struct thread_pool {
     int next_thread_id; // next thread id to assign
     int num_threads; // number of threads in pool
-    struct worker_thread threads[MAX_WORKER_THREADS]; // threads
+    struct worker_thread* threads[MAX_WORKER_THREADS]; // threads
     queue_t* que; // queue used by threads
 };
 /// @brief Initializes the thread pool with num_threads.
@@ -25,4 +25,6 @@ extern struct thread_pool* thread_pool_init(queue_t* que, int num_threads);
 /// This function should be called after the queue is closed.
 /// @param pool the thread pool
 extern void thread_pool_destroy(struct thread_pool* pool);
+extern void* worker_function(void* arg);
+
 #endif

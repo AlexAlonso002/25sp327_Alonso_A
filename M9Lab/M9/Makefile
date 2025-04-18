@@ -1,15 +1,13 @@
 CC=gcc
 LINKER=gcc
-CFLAGS=-Wall -Wextra -O0
-LDFLAGS=-g
+CFLAGS=-Wall -Wextra -O0 
+LDFLAGS=-g 
 LIBS=-lpthread
-OBJS=worker_thread.o  main.o queue.o tasks.o
+OBJS= worker_thread.o  main.o queue.o tasks.o thread_pool.o 
 TARGETS=  test_queue request_server 
 #worker_thread_pool.o 
 all: $(TARGETS)
 
-worker_thread_pool: $(OBJS) 
-	$(LINKER) $(LINKER_FLAGS) $(OBJS) $(LIBS) -o worker_thread_pool
 
 request_server: $(OBJS)
 	$(LINKER) $(LDFLAGS) $(OBJS) $(LIBS) -o request_server
@@ -36,6 +34,7 @@ test_queue.o: test_queue.c queue_internal.h queue.h
 
 test_queue: test_queue.o queue.o
 	$(LINKER) $(LDFLAGS) test_queue.o queue.o -o test_queue -lcmocka -Wl,--wrap=pthread_mutex_lock,--wrap=pthread_mutex_unlock
+
 
 clean:
 	rm -fr *.o $(OBJS) $(TARGETS)
