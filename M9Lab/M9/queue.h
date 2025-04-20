@@ -23,7 +23,7 @@
  /// @param data the data 
  extern void queue_enqueue(queue_t* que, void* data);
 
- extern void queue_dequeue(queue_t* que);
+ extern void* queue_dequeue(queue_t* que);
 
  extern void queue_close(queue_t* que);
 

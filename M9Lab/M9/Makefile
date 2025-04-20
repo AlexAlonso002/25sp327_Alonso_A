@@ -7,6 +7,8 @@ OBJS= worker_thread.o  main.o queue.o tasks.o thread_pool.o
 TARGETS=  test_queue request_server 
 #worker_thread_pool.o 
 all: $(TARGETS)
+#gcc -Wall -Wextra -O0 -g -fsanitize=address worker_thread.o main.o queue.o tasks.o thread_pool.o -lpthread -o request_server
+
 
 
 request_server: $(OBJS)

@@ -1,0 +1,10 @@
+[2025-04-20 09:28:47] [Thread 5944] Sum of numbers < 156 is 12090
+[2025-04-20 09:28:47] [Thread 5944] Simulated delay of 0 seconds and 86 milliseconds.
+[2025-04-20 09:28:47] [Thread 5944] Log message 1
+[2025-04-20 09:28:48] [Thread 5945] Sum of numbers < 62 is 1891
+[2025-04-20 09:28:48] [Thread 5944] Simulated delay of 0 seconds and 54 milliseconds.
+[2025-04-20 09:28:49] [Thread 5945] Simulated delay of 0 seconds and 162 milliseconds.
+[2025-04-20 09:28:49] [Thread 5944] Simulated delay of 0 seconds and 117 milliseconds.
+[2025-04-20 09:28:49] [Thread 5944] Log message 2
+[2025-04-20 09:28:49] [Thread 5944] Simulated delay of 0 seconds and 99 milliseconds.
+[2025-04-20 09:28:49] [Thread 5945] Log message 3

@@ -1,0 +1,8 @@
+make clean
+gcc -Wall -Wextra -O0 -g -fsanitize=address -c worker_thread.c -o worker_thread.o
+gcc -Wall -Wextra -O0 -g -fsanitize=address -c main.c -o main.o
+gcc -Wall -Wextra -O0 -g -fsanitize=address -c queue.c -o queue.o
+gcc -Wall -Wextra -O0 -g -fsanitize=address -c tasks.c -o tasks.o
+gcc -Wall -Wextra -O0 -g -fsanitize=address -c thread_pool.c -o thread_pool.o
+gcc -Wall -Wextra -O0 -g -fsanitize=address worker_thread.o main.o queue.o tasks.o thread_pool.o -lpthread -o request_server
+ASAN_OPTIONS=halt_on_error=1 ./request_server 2 4

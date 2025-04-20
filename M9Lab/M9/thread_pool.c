@@ -1,10 +1,10 @@
 #include "thread_pool.h"
 #include "common.h"
 
+// send all threads to the do work function
 pthread_t create_worker_thread(struct worker_thread_params* params) {
     pthread_t tid;
     int result = pthread_create(&tid, NULL, do_work, params); 
-   // int result = 1 ; 
     if (result != 0) {
         handle_error("create_worker_thread: pthread_create failed");
     }
@@ -36,19 +36,16 @@ struct thread_pool* thread_pool_init(queue_t* que, int num_threads) {
 void thread_pool_destroy(struct thread_pool* pool) {
     if (!pool) {
         fprintf(stderr, "Error: thread pool is NULL.\n");
-        return;  // Or handle error in another way
+        return; 
     }
-    
+    // free each thread
     for (int i = 0; i < pool->num_threads; i++) {
         if (pool->threads[i]) {
-            pthread_join(pool->threads[i]->thread, NULL);  // Wait for the thread to finish
-            free(pool->threads[i]);  // Free the memory allocated for the thread structure
+            pthread_join(pool->threads[i]->thread, NULL);
+            printf("Freeing thread %d...\n", pool->threads[i]->thread_id);
+            free(pool->threads[i]); 
         }
     }
-
-    // Free the threads array itself
-    free(pool->threads);
-
-    // Now, free the thread pool structure itself
-    free(pool);
+    printf("Freeing thread pool structure...\n");
+    free(pool); 
 }

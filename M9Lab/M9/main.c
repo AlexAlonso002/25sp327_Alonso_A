@@ -28,6 +28,10 @@ int main(int argc, char* argv[]) {
     int num_threads = 0;
     int num_requests = 0;
     num_threads = atoi(argv[1]);  
+    if(num_threads > 20){
+        printf("Must be less than 20 threads") ;
+        exit(0) ; 
+    }
     num_requests = atoi(argv[2]);
 
     printf("Num of threads %d , num of requests %d\n", num_threads, num_requests);
@@ -44,17 +48,17 @@ int main(int argc, char* argv[]) {
     struct thread_pool* thread_pool = thread_pool_init(que, num_threads);
 
     int count = 1;
+    // send all the request into the queue
     while (count <= num_requests) {
         int task_type = rand() % 3;
         queue_enqueue(que, create_request(task_type));
         nap_random();
         count++;
     }
-
     queue_close(que);
     thread_pool_destroy(thread_pool);
     queue_destroy(que);
-
+    printf("Everything is destroy \n");
     // Perform cleanup tasks here
     pthread_exit((void*)0);
 }

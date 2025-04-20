@@ -53,42 +53,46 @@ void test_queue_init(void** state) {
 }
 
 void test_queue_dequeue(void ** state) {
-    pthread_mutex_t mutex;
-    pthread_cond_t cond_var;
+
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;
+
     queue_t* que = queue_init(&mutex, &cond_var);
     data_t data1 = {1};  
     data_t data2 = {2}; 
-
+     //printf("HI \n") ;
     will_return(__wrap_pthread_mutex_lock,0) ;
     will_return(__wrap_pthread_mutex_unlock,0) ;
 
     queue_enqueue(que, &data1);
     assert_int_equal(que->size, 1);
 
+   // printf("first enqueue \n") ;
     will_return(__wrap_pthread_mutex_lock,0);
     will_return(__wrap_pthread_mutex_unlock,0);
 
     queue_enqueue(que, &data2);
     assert_int_equal(que->size, 2);
-
+   // printf("sec enqueue \n") ;
     will_return(__wrap_pthread_mutex_lock,0);
     will_return(__wrap_pthread_mutex_unlock,0);
 
     queue_dequeue(que) ; 
     assert_int_equal(que->size, 1);
-
+    //printf("first deq \n") ;
     will_return(__wrap_pthread_mutex_lock,0);
     will_return(__wrap_pthread_mutex_unlock,0);
 
+  
     queue_dequeue(que) ; 
     assert_int_equal(que->size, 0);
-
+   // printf("sec deq  \n") ;
     queue_destroy(que) ; 
 }
 
 void test_que_is_close(void** state){
-    pthread_mutex_t mutex;
-    pthread_cond_t cond_var;
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t cond_var = PTHREAD_COND_INITIALIZER;
     queue_t* que = queue_init(&mutex, &cond_var);
     data_t data1 = {1};  
     data_t data2 = {2}; 
@@ -117,7 +121,11 @@ void test_que_is_close(void** state){
     queue_dequeue(que) ; 
     assert_int_equal(que->size, 0);
 
+    will_return(__wrap_pthread_mutex_lock,0);
+    will_return(__wrap_pthread_mutex_unlock,0);
+
     queue_close(que) ; 
+
     assert_true(queue_isclose(que));
 
     queue_destroy(que) ; 
