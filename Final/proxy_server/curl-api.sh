@@ -17,10 +17,10 @@ BASE_URL="http://localhost:8000/api"
 declare -A RESOURCES=(
     [posts]=5
     [comments]=5
-    [albums]=5
-    [photos]=10
-    [todos]=20
-    [users]=5
+    [albums]=3
+    [photos]=1
+    [todos]=2
+    [users]=4
 )
 
 # Function to make a request via curl

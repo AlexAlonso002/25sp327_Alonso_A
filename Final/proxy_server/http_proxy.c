@@ -28,7 +28,7 @@ static bool receive_client_request(int client_socket, char *buffer);
  * @param arg the client socket
  */
 void handle_client_request_thread(void *arg) {
-    printf("in function \n ") ;
+   // printf("in function \n ") ;
     int client_socket = *((int *)arg);
     free(arg);
     handle_client_request(client_socket);
@@ -40,12 +40,10 @@ void handle_client_request_thread(void *arg) {
  */
 void handle_client_request(int client_socket) { //Can removed static if you want, OG code-> void handle_client_request(int client_socket)
     char buffer[BUFFER_SIZE];
-     // STUCK HERE 
     if (!receive_client_request(client_socket, buffer)) {
         perror("Error receiving client request");
         return;
     }
-    printf("after receive client request \n") ;
     char hostname[256];
     int port;
 
@@ -61,7 +59,6 @@ void handle_client_request(int client_socket) { //Can removed static if you want
     if (target_socket < 0) {
         return; //if you cant get it, it just returns a -1
     }
-
     // Forward the clients request to the target server
     forward_request(target_socket, buffer);
 
@@ -154,7 +151,7 @@ static bool parse_http_request(const char *buffer, char *hostname, int *port) {
 
     return true;
 }
-// NEEEEEEEEEEEEEEED TOOOOOOOOOOOO DOOOOOOOO BELOWWWWW___________________------_______------_____------_____
+
 /**
  * @brief Connects to the target server
  * @param hostname the target host
@@ -162,8 +159,43 @@ static bool parse_http_request(const char *buffer, char *hostname, int *port) {
  * @return the socket for the target server or -1 on failure to connect
  */
 static int connect_to_target_server(const char *hostname, int port) {
-    // TODO implement this function
-    return 0;
+    struct addrinfo serv_addr; 
+    char port_str[6] ; 
+
+    memset(&serv_addr , 0 , sizeof(struct addrinfo)) ;
+    serv_addr.ai_family = AF_INET;
+    serv_addr.ai_socktype = SOCK_STREAM ; 
+    serv_addr.ai_flags = 0 ; 
+    serv_addr.ai_protocol = IPPROTO_TCP ;
+
+    struct addrinfo *result;
+    // needed to avoid core dump to port being a int
+    snprintf(port_str, sizeof(port_str), "%d", port);
+    int rval = getaddrinfo(hostname, port_str, &serv_addr, &result);
+
+    if (rval != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rval));
+       return -1 ; 
+    }
+    //print_addrinfo(result);
+    struct addrinfo *p;
+    int sockfd;
+    for (p = result; p != NULL; p = p->ai_next) {
+        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if (sockfd < 0)
+            continue;
+
+        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == 0){
+            printf("Connected to server \n") ;
+            break; // Success
+        }
+
+        close(sockfd);
+        //sockfd = -1 ; 
+    }
+    freeaddrinfo(result) ;
+    printf("sockfd is %d \n " , sockfd) ;
+    return sockfd ;
 }
 
 /**
@@ -171,6 +203,22 @@ static int connect_to_target_server(const char *hostname, int port) {
  * @param target_socket
  * @param client_socket
  */
+
 static void forward_response(int target_socket, int client_socket) {
-    // TODO Implement this function
+    char buffer[BUFFER_SIZE];
+    int n;
+
+    memset(buffer, 0, sizeof(buffer));
+    n = recv(target_socket, buffer, sizeof(buffer) - 1, 0);
+      if (n < 0) {
+        perror("ERROR reading from socket");
+        exit(EXIT_FAILURE);
+    }
+    n = send(client_socket, buffer, n, 0);
+
+    if (n < 0) {
+        perror("ERROR writing to socket");
+        exit(EXIT_FAILURE);
+    }
+    printf("Forwarding Reponse back to the client ... \n") ;
 }
