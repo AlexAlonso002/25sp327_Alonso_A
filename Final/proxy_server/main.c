@@ -32,11 +32,19 @@ int main(int argc, char* argv[]) {
     }
     pthread_mutex_t req_mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t req_cond = PTHREAD_COND_INITIALIZER;
-    // Initialize queue and thread pool
+
+    // TODO Initialize a queue and thread pool to handle requests
+    /**
+ * @brief Creating the queueu and thread pool
+ * @param req_mutex = mutex pointer for the thread
+ @param req_cond = condtion var to signal dequeue
+ @param num_threads = num of threads we want to create
+
+ */
      queue_t* que = queue_init(&req_mutex, &req_cond);
       struct thread_pool* thread_pool = thread_pool_init(que, num_threads);
 
-    // Create socket for the server
+   // TODO Create socket for the proxy server to listen on the LISTEN_PORT
     int sockfd, newsockfd;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
@@ -65,7 +73,22 @@ int main(int argc, char* argv[]) {
     // listening
     listen(sockfd, 5);  
     clilen = sizeof(cli_addr);
-    signal(SIGINT,handle_sigint);
+
+// TODO Accept incoming client connections. Add a request_t to the queue to
+    // handle the client's HTTP request. The client socket is the argument to be
+    // passed to the handle_client_request_thread function.
+    // Continue to accept client connections until SIGINT is received.
+
+    struct sigaction exit2;
+    memset(&exit2, 0, sizeof(exit2));
+    exit2.sa_handler = handle_sigint;
+    exit2.sa_flags = SA_RESTART;
+
+    if (sigaction(SIGINT, &exit2, NULL) == -1) {
+        perror("Signal failed to create \n");
+        exit(1);
+    }
+
     while (!stop ) {
         //connect to serve
         newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &clilen);
@@ -79,28 +102,25 @@ int main(int argc, char* argv[]) {
             perror("malloc client socket");
             continue;
         }
-
-        *client_socket_ptr = newsockfd; 
-
+         *client_socket_ptr = newsockfd; 
         // Allocate memory for the request_t structure
-        request_t* req = malloc(sizeof(request_t));
+        request_t* request = malloc(sizeof(request_t));
         //if fails try again
-        if (!req) {
-            perror("malloc request");
+        if (!request) {
+            perror("malloc request for request has failed \n");
             free(client_socket_ptr);  
             continue;
         }
-
-        // Set up the request_t structure
-        req->work_fn = handle_client_request_thread;
-        req->arg = client_socket_ptr;
+        // create request
+        request->work_fn = handle_client_request_thread;
+        request->arg = client_socket_ptr;
         // send each called of request to the queue
-        queue_enqueue(que , req) ;
+        queue_enqueue(que , request) ;
     }
 
-    // Clean up
+    // TODO perform any clean up before server shutdown
     close(sockfd);
-   // free(req) ;
+    //free(request) ;
     queue_close(que);
     thread_pool_destroy(thread_pool);
     queue_destroy(que);

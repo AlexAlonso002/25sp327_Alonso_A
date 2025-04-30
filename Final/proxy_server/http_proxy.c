@@ -186,15 +186,14 @@ static int connect_to_target_server(const char *hostname, int port) {
             continue;
 
         if (connect(sockfd, p->ai_addr, p->ai_addrlen) == 0){
-            printf("Connected to server \n") ;
+          //  printf("Connected to server \n") ;
             break; // Success
         }
 
         close(sockfd);
-        //sockfd = -1 ; 
     }
     freeaddrinfo(result) ;
-    printf("sockfd is %d \n " , sockfd) ;
+  //  printf("sockfd is %d \n " , sockfd) ;
     return sockfd ;
 }
 
