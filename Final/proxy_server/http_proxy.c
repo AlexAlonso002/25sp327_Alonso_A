@@ -192,6 +192,9 @@ static int connect_to_target_server(const char *hostname, int port) {
 
         close(sockfd);
     }
+    if(p == NULL){
+        fprintf(stderr, "ERROR connecting to host \n") ;
+    }
     freeaddrinfo(result) ;
   //  printf("sockfd is %d \n " , sockfd) ;
     return sockfd ;
@@ -207,12 +210,15 @@ static void forward_response(int target_socket, int client_socket) {
     char buffer[BUFFER_SIZE];
     int n;
 
+    // recieve message from target 
     memset(buffer, 0, sizeof(buffer));
     n = recv(target_socket, buffer, sizeof(buffer) - 1, 0);
       if (n < 0) {
         perror("ERROR reading from socket");
         exit(EXIT_FAILURE);
     }
+
+    //send the message to the client 
     n = send(client_socket, buffer, n, 0);
 
     if (n < 0) {

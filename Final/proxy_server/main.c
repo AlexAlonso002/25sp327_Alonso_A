@@ -21,10 +21,16 @@
 // global var to stop while loop
 volatile sig_atomic_t stop = 0 ;
 
-void handle_sigint(int sig) {
+    /**
+ * @brief handle sigint signal to exit queueu
+ * @param req_mutex = the signal
+
+ */
+void handle_sigint() {
     printf("\n Stopping \n") ;
     stop++ ; 
 }
+
 int main(int argc, char* argv[]) {
     int num_threads = 2;  // Default number of threads
     if (argc == 2) {
@@ -82,8 +88,7 @@ int main(int argc, char* argv[]) {
     struct sigaction exit2;
     memset(&exit2, 0, sizeof(exit2));
     exit2.sa_handler = handle_sigint;
-    exit2.sa_flags = SA_RESTART;
-
+     exit2.sa_flags = SA_RESTART;
     if (sigaction(SIGINT, &exit2, NULL) == -1) {
         perror("Signal failed to create \n");
         exit(1);
