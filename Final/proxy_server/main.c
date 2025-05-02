@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
             perror("Error on accept");
             exit(1);
         }
-        // give this socket its own memory
+        // each socket needs it own mem for the threads 
         int *client_socket_ptr = malloc(sizeof(int));
         if (!client_socket_ptr) {
             perror("malloc client socket");
@@ -110,7 +110,6 @@ int main(int argc, char* argv[]) {
          *client_socket_ptr = newsockfd; 
         // Allocate memory for the request_t structure
         request_t* request = malloc(sizeof(request_t));
-        //if fails try again
         if (!request) {
             perror("malloc request for request has failed \n");
             free(client_socket_ptr);  
